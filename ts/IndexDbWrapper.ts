@@ -9,7 +9,7 @@
  	keyPath:->String,  (its like key, usually 'id', getById(), works only with this property
 *	indexes:->Array of indexes
 * 
-* Add/Remove Index: if you want to add/remove index, you just chnage them in array
+* Add/Remove Index: if you want to add/remove index, you just change them in array
 * you have to update the version value too	
 * system will automaticall remove or add indexes based on array 
 
