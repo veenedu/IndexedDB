@@ -1,0 +1,22 @@
+{
+  "name": "veen.indexeddb",
+  "homepage": "https://github.com/veenedu/IndexedDB",
+  "authors": [
+    "Praveen Prasad <veen.edu@gmail.com>"
+  ],
+  "description": "This in indexedDB wrapper",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "indexed",
+    "db"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
