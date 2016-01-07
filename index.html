@@ -1,9 +1,41 @@
-<!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-</head>
-<body>
-
-</body>
+	<head>
+		<script src="/bower_components/angular/angular.js"></script>
+		<script src="/dist/indexeddb.js"></script>
+		<script src="index.js"></script>	
+		
+		<style>
+			.red{
+				color: red;
+				font-weight: bold;
+			}
+			.green{
+				color: green;
+			}
+		</style>	
+	</head>
+	<body ng-app="app">
+		<div ng-controller="MainController as ctrl">
+			{{ctrl.status}}
+			
+			<br><br>
+			<h2>Test Results</h2>
+			<br><br>
+			<table border=1>
+				<tr>
+					<td>Description</td>
+					<td>Result</td>
+					<td>Expected</td>
+					<td>Received</td>
+				</tr>
+				<tr ng-repeat="res in ctrl.results">
+					<td>{{res.description}}</td>
+					<td ng-class="{red:!res.result, green: res.result }">{{res.result}}</td>
+					<td>{{res.expected}}</td>
+					<td>{{res.received}}</td>
+				</tr>
+			</table>
+		</div>
+	</body>
 </html>
+
