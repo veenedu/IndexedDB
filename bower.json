@@ -5,7 +5,7 @@
     "Praveen Prasad <veen.edu@gmail.com>"
   ],
   "description": "This in indexedDB wrapper",
-  "main": "",
+  "main": "./dist/indexeddb.js",
   "moduleType": [],
   "keywords": [
     "indexed",
