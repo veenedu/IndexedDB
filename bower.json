@@ -17,6 +17,11 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "index.html",
+    "index.js",
+    "gulpfile.js",
+    "readme.txt",
+    "package.json"      
   ]
 }
