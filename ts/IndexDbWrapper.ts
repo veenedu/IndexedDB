@@ -89,7 +89,6 @@ you need to have an index on 'age' property
 
 
 (function() {
-	var app = angular.module('veen.db', []);
 
 	var CURSOR_TYPE = {
 		NEXT: 'next',
@@ -557,6 +556,8 @@ you need to have an index on 'age' property
 	}
 
 
+
+	var app = angular.module('veen.db', []);
 
 
 	app.factory('indexedDB', ['$window', '$q', function($window, $q) {
