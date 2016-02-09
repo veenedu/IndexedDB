@@ -8,10 +8,9 @@ var order = require("gulp-order");
 
 
 
-gulp.task('ts',function(){
+gulp.task('ts_ang',function(){
     var dist_file= "indexeddb.angular.js";
 	var folder  = gulp.src('tsAngular/**/*.ts');
-	// console.log(es.merge())
 	
 	return es.
 	merge(folder)
@@ -24,8 +23,26 @@ gulp.task('ts',function(){
 	;
 });
 
+gulp.task('ts_js',function(){
+    var dist_file= "indexeddb.js";
+	var folder  = gulp.src('tsJavascript/**/*.ts');
+	
+	return es.
+	merge(folder)
+	.pipe(tsc())	
+	.pipe(concat(dist_file))
+	.pipe(gulp.dest('dist'))
+	.pipe(uglify())
+	.pipe(rename({ extname: '.min.js' }))	
+	.pipe(gulp.dest('dist'))		
+	;
+});
+
+
+
 gulp.task('watch',function(){
-	gulp.watch(['tsAngular/**/*.ts'],['ts']);		
+	gulp.watch(['tsAngular/**/*.ts'],['ts_ang']);		
+	gulp.watch(['tsJavascript/**/*.ts'],['ts_js']);		
 	// gulp.watch(['ts1/*.ts','ts2/*.ts'],['ts']);	
 	// gulp.watch(['sass/**/*.scss', 'layouts/**/*.css'], ['css']);
 
