@@ -87,7 +87,6 @@ you need to have an index on 'age' property
 	put --> if doc already exists its updated
  */
 
-
 (function() {
 
 	var CURSOR_TYPE = {

@@ -7,10 +7,10 @@ var rename = require('gulp-rename');
 var order = require("gulp-order");
 
 
-var dist_file= "indexeddb.js";
 
 gulp.task('ts',function(){
-	var folder  = gulp.src('ts/**/*.ts');
+    var dist_file= "indexeddb.angular.js";
+	var folder  = gulp.src('tsAngular/**/*.ts');
 	// console.log(es.merge())
 	
 	return es.
@@ -25,7 +25,7 @@ gulp.task('ts',function(){
 });
 
 gulp.task('watch',function(){
-	gulp.watch(['ts/**/*.ts'],['ts']);		
+	gulp.watch(['tsAngular/**/*.ts'],['ts']);		
 	// gulp.watch(['ts1/*.ts','ts2/*.ts'],['ts']);	
 	// gulp.watch(['sass/**/*.scss', 'layouts/**/*.css'], ['css']);
 
