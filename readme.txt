@@ -1,3 +1,6 @@
+Indexed DB wrapper. for Angular and Native Javascript
+------
+
 There are  two versions of file.
 one can be used with angular.js and one can be used directly in Javascript projects.
 2nd File can also be used with moduleJs
