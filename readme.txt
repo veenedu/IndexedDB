@@ -1,3 +1,14 @@
+There are  two versions of file.
+one can be used with angular.js and one can be used directly in Javascript projects.
+2nd File can also be used with moduleJs
+
+var veen = require('file_name');
+
+or
+
+import veen from 'file_name';
+----------
+----------
 see readme.txt of utils package to learn about 
 file structure,
 bower,
@@ -25,7 +36,7 @@ eg: if you want to run query like select * from persons where age>23
 you need to have an index on 'age' property
 
 *
- * var db = indexedDB.init("db_name",1,[
+ * var db = veen.indexedDB.init("db_name",1,[
         {
             name:'persons',
             keyPath:'id',
@@ -43,7 +54,12 @@ you need to have an index on 'age' property
     db.runQuery().then(function(res){
         //something
     })
-
+    
+    //some sample queries
+    
+    //insert a docs
+    db.insertDoc('table_name',{doc_object}).then;
+    
     //get all docs where age=30
     db.getDocsEquals('table_name','age',30).then
 
@@ -60,7 +76,8 @@ you need to have an index on 'age' property
         //you dont have to return the object
     })
 
-
+    
+    //List of API
     'clearTable'
     'deleteDb'
     'insertDoc' --  (upsert) inserts a doc
