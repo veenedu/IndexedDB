@@ -578,6 +578,9 @@ var veen = {
 
 })();
 
+if(module && module.exports){
+    module.exports = veen;
+}
 
 ///Delete Table
 //db.deleteObjectStore(tabelName);

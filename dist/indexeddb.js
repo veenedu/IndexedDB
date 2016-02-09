@@ -509,6 +509,9 @@ var veen = {
         return state.init(window, dbName, version, schema);
     };
 })();
+if (module && module.exports) {
+    module.exports = veen;
+}
 ///Delete Table
 //db.deleteObjectStore(tabelName);
 //Range
