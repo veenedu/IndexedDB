@@ -1,23 +1,23 @@
 
 /**
  * DOCS
- * 
- * Create database 
+ *
+ * Create database
  * indexedDB.init('db_name',version,schema);
- * schema: an array of oject with three properties::: 
- *  name:->String, 
+ * schema: an array of oject with three properties:::
+ *  name:->String,
  	keyPath:->String,  (its like key, usually 'id', getById(), works only with this property
 *	indexes:->Array of indexes
-* 
+*
 * Add/Remove Index: if you want to add/remove index, you just change them in array
-* you have to update the version value too	
-* system will automaticall remove or add indexes based on array 
+* you have to update the version value too
+* system will automaticall remove or add indexes based on array
 
 Index---> you need index to run query on a proprty
 eg: if you want to run query like select * from persons where age>23
 you need to have an index on 'age' property
 
-* 									
+*
  * var db = indexedDB.init("db_name",1,[
 		{
 			name:'persons',
@@ -30,63 +30,66 @@ you need to have an index on 'age' property
 			indexes:['feedId','shares']
 		}
 	]);
-	
-	
+
+
 	//format
 	db.runQuery().then(function(res){
 		//something
 	})
-	
+
 	//get all docs where age=30
 	db.getDocsEquals('table_name','age',30).then
-	
+
 	//get all docs  where age less than 30
 	db.getDocsLessThan('table_name','age',30).then
-	
+
 	//get all docs where age between 18 and 60
 	db.getAllDocsRange('table','age',18,60)
-	
+
 	//update all docs where
 	age less than 30
 	db.updateDocsLessThan('table_name','age',30,function(person){
 		person.type = "foo"
 		//you dont have to return the object
 	})
-	
-	
-	'clearTable' 
+
+
+	'clearTable'
 	'deleteDb'
 	'insertDoc' --  (upsert) inserts a doc
 	'insertDocs' -- (upsert) inserts an array of objects
-	
+
 	'getById' -- get object, where id= keyPath
 	'getAllDocs' -- get all docs of a table
-	'getDocsEquals' 
-	'getDocsLessThan' 
-	'getDocsGreaterThan' 
+	'getDocsEquals'
+	'getDocsLessThan'
+	'getDocsGreaterThan'
 	'getDocsRange'
-	
+
 	'updateAllDocs'
-	'updateDocsEquals' 
+	'updateDocsEquals'
 	'updateDocsLessThan'
 	'updateDocsGreaterThan'
 	'updateDocsRange'
-	
+
 	'deleteDoc'  -- deletes a doc, you pass object or key
 	'deleteDocs' -- delets array of obejcts, you pass objects or ids array
 	'deleteAllDocs'
 	'deleteDocsEquals'
 	'deleteDocsLessThan'
 	'deleteDocsGreaterThan'
-	'deleteDocsRange'	
-	
-	
+	'deleteDocsRange'
+
+
 	'put' vs 'add'
 	while inserting doc/docs we can choose two methods 'put' or 'add'
 	add --> if doc already exists its ignored
 	put --> if doc already exists its updated
  */
 
+var veen = {
+	indexedDB: { }
+};
 
 (function() {
 
@@ -114,7 +117,7 @@ you need to have an index on 'age' property
 			'updateAllDocs','updateDocsEquals', 'updateDocsLessThan','updateDocsGreaterThan','updateDocsRange',
 			'deleteDoc', 'deleteDocs','deleteAllDocs','deleteDocsEquals','deleteDocsLessThan','deleteDocsGreaterThan','deleteDocsRange'
 		],
-		
+
 		//this method adds common methods to txn
 		addCommonMethods: function(txn, callback) {
 			txn.onerror = function(result) {
@@ -130,24 +133,24 @@ you need to have an index on 'age' property
 				callback(result, true);
 			};
 		},
-		//query store(table) its raw query 
+		//query store(table) its raw query
 		query: function(db, callback, tableName, txnType?, cursorType?, index?, range?, onEachCursor?, onComplete?) {
 			//OnComplete: if undefined then whatever value received from tansaction wil be paaded
 			//if you define this function than whatever value you will return will be passed as result
-				
-			//onEachCursor:: we will call this method on each cursor(guarantee that cursor cant be null or empty), 
-			///you delete update or collect cursor or its value 
-			
+
+			//onEachCursor:: we will call this method on each cursor(guarantee that cursor cant be null or empty),
+			///you delete update or collect cursor or its value
+
 			var txn = db.transaction(tableName, (txnType || TRANSACTION_TYPE.READONLY));
 			var query = txn.objectStore(tableName);
-				
-			// //default values				
+
+			// //default values
 			range = (range === undefined) ? null : range;
 			cursorType = cursorType || CURSOR_TYPE.NEXT;
 
 			onComplete = onComplete || emptyFn;
-			onEachCursor = onEachCursor || emptyFn 			
-				
+			onEachCursor = onEachCursor || emptyFn
+
 			// //bind methods
 			dbMethods.addCommonMethods(txn, callback);
 			txn.oncomplete = function(result) {
@@ -157,8 +160,8 @@ you need to have an index on 'age' property
 			if (index) {
 				query = query.index(index);
 			}
-				
-			//run query				
+
+			//run query
 			query = query.openCursor(range, cursorType);
 
 			query.onsuccess = function(e) {
@@ -198,7 +201,7 @@ you need to have an index on 'age' property
 
 			dbMethods.query(db, callback, tableName, transactionType, cursorType, property, range, onEachCursor, onComplete);
 		},
-		
+
 		//its base structure for read query
 		getDocsBase: function(db, callback, tableName, property?, clause?) {
 			var transactionType = TRANSACTION_TYPE.READONLY;
@@ -222,7 +225,7 @@ you need to have an index on 'age' property
 		getAllDocs: function(db, callback, tableName) {
 			dbMethods.getDocsBase(db, callback, tableName);
 		},
-		
+
 		//select * from table where prop=value
 		getDocsEquals: function(db, callback, tableName, property, value) {
 			dbMethods.getDocsBase(db, callback, tableName, property, {
@@ -251,15 +254,15 @@ you need to have an index on 'age' property
 				inclusive: [includeEndPoint1, includeEndPoint2]
 			});
 		},
-		
+
 		//this methods returns a single row with id
 		getById:function(db, callback, tableName, id){
 				var txn = db.transaction(tableName, TRANSACTION_TYPE.READWRITE);
 				var table = txn.objectStore(tableName);
 				var request = table.get(id);
-				
+
 				dbMethods.addCommonMethods(txn, callback);
-				
+
 				txn.oncomplete = function(res){
 					callback(request.result);
 				};
@@ -282,16 +285,16 @@ you need to have an index on 'age' property
 			}
 			dbMethods.queryWithClause(db, callback, tableName, transactionType, cursorType, property, clause, onEachCursor, onComplete);
 		},
-		
+
 		updateAllDocs:function(db, callback, tableName, updateFn){
 			dbMethods.updateDocsBase(db,callback,tableName,updateFn);
 		},
-		
+
 		updateDocsEquals:function(db, callback, tableName, property, value,updateFn){
 			dbMethods.updateDocsBase(db, callback, tableName,updateFn, property, {
 				operator: "=",
 				values: [value]
-			})			
+			})
 		},
 		//
 		updateDocsLessThan:function(db, callback, tableName, property, value,updateFn,includeEndPoint?){
@@ -300,24 +303,24 @@ you need to have an index on 'age' property
 				values: [value],
 				inclusive: [includeEndPoint]
 			});
-		},  
+		},
 		updateDocsGreaterThan:function(db, callback, tableName, property, value,updateFn,includeEndPoint?){
 			dbMethods.updateDocsBase(db,callback,tableName,updateFn,property,{
 				operator: ">",
 				values: [value],
 				inclusive: [includeEndPoint]
-			});	
-		}, 
-		
+			});
+		},
+
 		 updateDocsRange:function(db, callback, tableName, property,  start, end,updateFn,includeEndPoint1?, includeEndPoint2?){
 			dbMethods.updateDocsBase(db,callback,tableName,updateFn,property,{
 				operator: "<>",
 				values: [start, end],
 				inclusive: [includeEndPoint1, includeEndPoint2]
-			});				
-			
+			});
+
 		 },
-		
+
 		insertDoc: function(db, callback, tableName, doc) {
 			var txn = db.transaction(tableName, TRANSACTION_TYPE.READWRITE);
 			var table = txn.objectStore(tableName);
@@ -342,8 +345,8 @@ you need to have an index on 'age' property
 		},
 		deleteDocs: function(db, callback, tableName, docsOrIds, keyPath?) {
 			//docsOrIds --> array of ids or objects or mixed
-			//if objects then keyPath will be 'id', if keyPath is undefined 
-			
+			//if objects then keyPath will be 'id', if keyPath is undefined
+
 			var txn = db.transaction(tableName, TRANSACTION_TYPE.READWRITE);
 			var table = txn.objectStore(tableName);
 			dbMethods.addCommonMethods(txn, callback);
@@ -368,7 +371,7 @@ you need to have an index on 'age' property
 			//delete object or id
 			dbMethods.deleteDocs(db, callback, tableName, [docOrId], keyPath);
 		},
-		
+
 		deleteDocsBase: function(db, callback, tableName, property?, clause?) {
 			//update fn should just update the value it want to update, no need to return value
 			var transactionType = TRANSACTION_TYPE.READWRITE;
@@ -384,40 +387,40 @@ you need to have an index on 'age' property
 				return items;
 			}
 			dbMethods.queryWithClause(db, callback, tableName, transactionType, cursorType, property, clause, onEachCursor, onComplete);
-		},		
-		
+		},
+
 		deleteAllDocs:function(db, callback, tableName, updateFn){
 			dbMethods.deleteDocsBase(db,callback,tableName,updateFn);
 		},
-		
+
 		deleteDocsEquals:function(db, callback, tableName, property, value){
 			dbMethods.deleteDocsBase(db, callback, tableName, property, {
 				operator: "=",
 				values: [value]
-			})			
+			})
 		},
-		
+
 		deleteDocsLessThan:function(db, callback, tableName, property, value,includeEndPoint?){
 			dbMethods.deleteDocsBase(db,callback,tableName,property,{
 				operator: "<",
 				values: [value],
 				inclusive: [includeEndPoint]
 			});
-		},  
+		},
 		deleteDocsGreaterThan:function(db, callback, tableName, property, value,includeEndPoint?){
 			dbMethods.deleteDocsBase(db,callback,tableName,property,{
 				operator: ">",
 				values: [value],
 				inclusive: [includeEndPoint]
-			});	
-		}, 
-		
+			});
+		},
+
 		 deleteDocsRange:function(db, callback, tableName, property,  start, end,includeEndPoint1?, includeEndPoint2?){
 			dbMethods.deleteDocsBase(db,callback,tableName,property,{
 				operator: "<>",
 				values: [start, end],
 				inclusive: [includeEndPoint1, includeEndPoint2]
-			});				
+			});
 		 },
 
 		deleteDb: function(db, callback) {
@@ -447,87 +450,89 @@ you need to have an index on 'age' property
 		reset: function() {
 			state.promise = undefined;
 			state.window = undefined;
+			state.db = undefined;
 		},
 		promise: undefined,
-		promiseWrapper: function($q, fn) {
-			var defer = $q.defer();
-			state.promise.then(function(db) {
-				fn(db, function(data, fail) {
-					if (!fail) {
-						defer.resolve(data);
-					} else {
-						defer.reject(data);
-					}
+		db:undefined,
+		promiseWrapper: function(fn) {
+	   	var promise = new Promise(function(resolve, reject) {
+				state.promise.then(function(db){
+					fn(db || state.db , function(data,fail){
+						var method = fail ? reject : resolve;
+						method(data);
+					});
 				})
 			});
-			return defer.promise;
+			return promise;
 		},
-		createDatabase: function($window, $q, dbName, version, schema) {
-			state.window = $window;
-			var defer = $q.defer();
-			state.promise = defer.promise;
+		createDatabase: function($window, dbName, version, schema) {
+				var promise = new Promise(function(resolve, reject){
+					state.window = $window;
 
-			if (!('indexedDB' in $window)) {
-				$window.indexedDB = $window.mozIndexedDB || $window.webkitIndexedDB || $window.msIndexedDB;
-			}
-
-			if (!('IDBTransaction' in $window)) {
-				$window.IDBTransaction = $window.IDBTransaction || $window.webkitIDBTransaction || $window.msIDBTransaction;
-			}
-			if (!('IDBKeyRange' in $window)) {
-				$window.IDBKeyRange = $window.IDBKeyRange || $window.webkitIDBKeyRange || $window.msIDBKeyRange;
-			}
-
-			var dbRequest = $window.indexedDB.open(dbName, version);
-			dbRequest.onsuccess = function(evt) {
-				var db = evt.target.result;
-				defer.resolve(db);
-			}
-			dbRequest.onblocked = function() { }
-			dbRequest.onerror = function() { }
-			dbRequest.onupgradeneeded = function(evt) {
-					
-				//create stores
-				var db = evt.target.result;
-				for (var i = 0; i < schema.length; i++) {
-					var t = schema[i];
-
-					//table reference
-					var table;
-						
-					//table already exists refer it
-					if (db.objectStoreNames.contains(t.name)) {
-						table = evt.currentTarget.transaction.objectStore(t.name);
+					if (!('indexedDB' in $window)) {
+						$window.indexedDB = $window.mozIndexedDB || $window.webkitIndexedDB || $window.msIndexedDB;
 					}
-					//table doesnt exists, create it
-					else {
-						table = db.createObjectStore(t.name, { keyPath: t.keyPath, unique: true });
+
+					if (!('IDBTransaction' in $window)) {
+						$window.IDBTransaction = $window.IDBTransaction || $window.webkitIDBTransaction || $window.msIDBTransaction;
 					}
-						 
-					//delete Indexes
-					//remove all those indexes that doesn't exist in current schema
-					for (var k = 0; k < table.indexNames.length; k++) {
-						var index = table.indexNames[k];
-							
-						//new structure doesn't contain this index delete it
-						if (t.indexes.indexOf(index) < 0) {
-							table.deleteIndex(index, index, { unique: false });
+					if (!('IDBKeyRange' in $window)) {
+						$window.IDBKeyRange = $window.IDBKeyRange || $window.webkitIDBKeyRange || $window.msIDBKeyRange;
+					}
+
+					var dbRequest = $window.indexedDB.open(dbName, version);
+					dbRequest.onsuccess = function(evt) {
+						var db = evt.target.result;
+						state.db = db;
+						resolve(db);
+					}
+					dbRequest.onblocked = function() { }
+					dbRequest.onerror = function() { }
+					dbRequest.onupgradeneeded = function(evt) {
+
+						//create stores
+						var db = evt.target.result;
+						for (var i = 0; i < schema.length; i++) {
+							var t = schema[i];
+
+							//table reference
+							var table;
+
+							//table already exists refer it
+							if (db.objectStoreNames.contains(t.name)) {
+								table = evt.currentTarget.transaction.objectStore(t.name);
+							}
+							//table doesnt exists, create it
+							else {
+								table = db.createObjectStore(t.name, { keyPath: t.keyPath, unique: true });
+							}
+
+							//delete Indexes
+							//remove all those indexes that doesn't exist in current schema
+							for (var k = 0; k < table.indexNames.length; k++) {
+								var index = table.indexNames[k];
+
+								//new structure doesn't contain this index delete it
+								if (t.indexes.indexOf(index) < 0) {
+									table.deleteIndex(index, index, { unique: false });
+								}
+							}
+
+							//create indexes
+							for (var j = 0; j < t.indexes.length; j++) {
+								var index = t.indexes[j];
+								//if index doesn't exists, create it
+								if (!table.indexNames.contains(index)) {
+									table.createIndex(index, index, { unique: false });
+								}
+							}
+
 						}
 					}
-												 
-					//create indexes
-					for (var j = 0; j < t.indexes.length; j++) {
-						var index = t.indexes[j];
-						//if index doesn't exists, create it
-						if (!table.indexNames.contains(index)) {
-							table.createIndex(index, index, { unique: false });
-						}
-					}
-
-				}
-			}
+				});
+				state.promise = promise;
 		},
-		wrapDbMethods: function($q) {
+		wrapDbMethods: function() {
 			var db_methods = {};
 
 			var methods = dbMethods.exposed;
@@ -535,76 +540,54 @@ you need to have an index on 'age' property
 				(function() {
 					var methodName = methods[i];
 					db_methods[methodName] = function(a, b, c, d, e, f, g, h, i, j, k) {
-						return state.promiseWrapper($q, function(db, callback) {
+						return state.promiseWrapper(function(db, callback) {
 							var method = dbMethods[methodName];
 							method(db, callback, a, b, c, d, e, f, g, h, i, j, k);
 						});
 					}
 				})()
 			}
-
 			return db_methods;
 		},
-		init: function($window, $q, dbName, version, schema) {
+		init: function($window, dbName, version, schema) {
 			//create db
-			state.createDatabase($window, $q, dbName, version, schema);
-				
-			//wrap DB Methods
-			return state.wrapDbMethods($q);
+			state.createDatabase($window, dbName, version, schema);
 
+			//wrap DB Methods
+			return state.wrapDbMethods();
 		}
 	}
 
 
+	veen.indexedDB.init = function(dbName,version,schema){
+					/**
+					 * dbName : name of database
+					 * version: version of Db
+					 * schema: an array of oject with three properties:::
+					 * name:->String,
+					 * keyPath:->String,  (its like key, usually 'id', getById(), works only with this property
+					 * indexes:->Array of indexes
+					 *
+					 * Addings/Remove Index: if you want to add/remove index, you just chnage them in array
+					 * you have to update the version value too
+					 *  */
 
-	var app = angular.module('veen.db', []);
 
-
-	app.factory('indexedDB', ['$window', '$q', function($window, $q) {
-		var service = {
-			init: function(dbName, version, schema) {
-				/**
-				 * dbName : name of database
-				 * version: version of Db
-				 * schema: an array of oject with three properties::: 
-				 * name:->String, 
-				 * keyPath:->String,  (its like key, usually 'id', getById(), works only with this property
-				 * indexes:->Array of indexes
-				 * 
-				 * Addings/Remove Index: if you want to add/remove index, you just chnage them in array
-				 * you have to update the version value too
-				 *  */
-				return state.init($window, $q, dbName, version, schema);
-			}
-		};
-		return service;
-	}]);
+					return state.init(window, dbName, version, schema);
+	}
 
 })();
 
 
-// 	class Entity {
-// 		id: string;
-// 		table: string;
-// 		private static counter: number = 0;
-
-// 		constructor(table: string) {
-// 			Entity.counter++; //increase counter to avoid same ids, 
-// 			this.id = new Date().toISOString() + Entity.counter;
-// 			this.table = table;
-// 		}
-// 	}
-
-
-///Dalete Table
+///Delete Table
 //db.deleteObjectStore(tabelName);
 
 //Range
-//https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange	
+//https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange
 
 
 //Read this "Version changes while a web app is open in another tab"
-//https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB	
+//https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
 
 //delete
 //https://developer.mozilla.org/en-US/docs/Web/API/IDBCursor/delete

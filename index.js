@@ -1,13 +1,13 @@
 var app = angular.module('app', ['veen.db']);
 
 app.controller('MainController', function (indexedDB) {
-	
+
 	var ctrl = this;
-	ctrl.status = "Controller Loaded";	
-	
+	ctrl.status = "Controller Loaded";
+
 	var results = [];
 	ctrl.results = results;
-	
+
 	function addResults(description,expected,received){
 		results.push({
 			description:description,
@@ -16,11 +16,11 @@ app.controller('MainController', function (indexedDB) {
 			received:received
 		});
 	}
-	
+
 	addResults("Pass Test",true,true);
 	addResults("Fail Test",true,false);
-	
-	
+
+
 	//
 	var db = indexedDB.init("db_name",2,[
 		{
@@ -34,21 +34,23 @@ app.controller('MainController', function (indexedDB) {
 			indexes:['feedId','shares']
 		}
 	]);
-	
-	
-	//insertDoc	
+
+
+	// //insertDoc
 	db.insertDoc("persons",{
 		id:1,
 		name: "Praveen",
 		age:31
 	}).then(function(){
 		db.getAllDocs("persons").then(function(res){
+			console.log(res);
+
 			addResults("Insert one doc",1,res.length);
-			
+
 			//
 			db.clearTable("persons");
-			
-			
+
+
 			//
 			db.insertDocs("persons", [
 					{id: 1,name: "Praveen",age: 31},
@@ -56,14 +58,17 @@ app.controller('MainController', function (indexedDB) {
 				]).then(function () {
 				db.getAllDocs("persons").then(function (res) {
 					addResults("Insert multiple docs", 2, res.length);
-							
+
 					//
 					db.clearTable("persons");
 				});
-			})													
-			
-			
+			})
+
+
 		});
 	})
+
+
+
 
 });

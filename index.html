@@ -1,9 +1,9 @@
 <html>
 	<head>
 		<script src="/bower_components/angular/angular.js"></script>
-		<script src="/dist/indexeddb.js"></script>
-		<script src="index.js"></script>	
-		
+		<script src="/dist/indexeddb.angular.js"></script>
+		<script src="index.js"></script>
+
 		<style>
 			.red{
 				color: red;
@@ -12,12 +12,12 @@
 			.green{
 				color: green;
 			}
-		</style>	
+		</style>
 	</head>
 	<body ng-app="app">
 		<div ng-controller="MainController as ctrl">
 			{{ctrl.status}}
-			
+
 			<br><br>
 			<h2>Test Results</h2>
 			<br><br>
@@ -38,4 +38,3 @@
 		</div>
 	</body>
 </html>
-
