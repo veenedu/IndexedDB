@@ -1,3 +1,7 @@
+#Project  Abandoned 
+use Google Lovefield(https://github.com/google/lovefield)
+
+
 Indexed DB wrapper. for Angular and Native Javascript
 ------
 
